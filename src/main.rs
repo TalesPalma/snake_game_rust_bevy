@@ -2,6 +2,7 @@ mod apple;
 mod rules_game;
 mod snake;
 
+use apple::apple_systems;
 use bevy::{
     prelude::*,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
@@ -15,6 +16,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
+        .add_systems(Update, apple_systems::spawn_apple_radom_locatint)
         .add_systems(Update, move_snake_controller_system)
         .add_systems(Update, move_snake_in_screen)
         .add_systems(Update, keyboard_input)
@@ -26,12 +28,11 @@ fn setup(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    //Camera sjust
+    //Camera ajuste
     commands.spawn(Camera2dBundle::default());
 
-    //Snake head created
+    //Snake body
     let triangulo = Mesh2dHandle(meshes.add(Rectangle::new(20.0, 20.0)));
-
     let color = Color::hsl(0.0, 1.0, 0.2);
 
     commands
