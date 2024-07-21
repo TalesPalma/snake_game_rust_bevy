@@ -1,24 +1,24 @@
+mod apple;
+mod rules_game;
+mod snake;
+
 use bevy::{
     prelude::*,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
+};
+use snake::snake_systems::{
+    keyboard_input, move_snake_controller_system, move_snake_in_screen, DirectionMoviment,
+    Position, Snake,
 };
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
+        .add_systems(Update, move_snake_controller_system)
+        .add_systems(Update, move_snake_in_screen)
+        .add_systems(Update, keyboard_input)
         .run();
-}
-
-struct Position {
-    x: f32,
-    y: f32,
-}
-
-#[derive(Component)]
-struct Snake {
-    segments: Vec<Position>,
-    direction: Direction,
 }
 
 fn setup(
@@ -30,18 +30,23 @@ fn setup(
     commands.spawn(Camera2dBundle::default());
 
     //Snake head created
-    let triangulo = Mesh2dHandle(meshes.add(Triangle2d::new(
-        Vec2::Y * 50.0,
-        Vec2::new(-50.0, -50.0),
-        Vec2::new(50.0, -50.0),
-    )));
+    let triangulo = Mesh2dHandle(meshes.add(Rectangle::new(20.0, 20.0)));
 
-    let color = Color::hsl(0.0, 1.0, 0.5);
+    let color = Color::hsl(0.0, 1.0, 0.2);
 
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: triangulo.clone(),
-        material: materials.add(color),
-        transform: Transform::from_xyz(0.0, 0.0, 0.0),
-        ..default()
-    });
+    commands
+        .spawn(MaterialMesh2dBundle {
+            mesh: triangulo.clone(),
+            material: materials.add(color),
+            transform: Transform::from_xyz(0.0, 0.0, 0.0),
+            ..default()
+        })
+        .insert(Snake {
+            segments: vec![
+                Position { x: 0.0, y: 0.0 },
+                Position { x: 2.0, y: 0.0 },
+                Position { x: 20.0, y: 0.0 },
+            ],
+            direction: DirectionMoviment::Up,
+        });
 }
