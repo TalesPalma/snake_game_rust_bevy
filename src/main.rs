@@ -1,8 +1,7 @@
 mod apple;
-mod rules_game;
+mod game_behavior;
 mod snake;
 
-use apple::apple_systems;
 use bevy::{
     prelude::*,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
@@ -16,7 +15,6 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
-        .add_systems(Update, apple_systems::spawn_apple_radom_locatint)
         .add_systems(Update, move_snake_controller_system)
         .add_systems(Update, move_snake_in_screen)
         .add_systems(Update, keyboard_input)
