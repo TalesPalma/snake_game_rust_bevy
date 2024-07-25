@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{math::vec2, prelude::*};
 
 pub struct Position {
     pub(crate) x: f32,
@@ -9,6 +9,7 @@ pub struct Position {
 pub struct Snake {
     pub(crate) segments: Vec<Position>,
     pub(crate) direction: DirectionMoviment,
+    pub position: Vec2,
 }
 
 pub(crate) enum DirectionMoviment {
@@ -31,8 +32,11 @@ pub fn move_snake_controller_system(mut query: Query<&mut Snake>) {
 
 pub fn move_snake_in_screen(mut query: Query<(&mut Snake, &mut Transform)>) {
     for (mut snake, mut transform) in query.iter_mut() {
-        transform.translation.x = snake.segments[0].x;
-        transform.translation.y = snake.segments[0].y;
+        let x = snake.segments[0].x;
+        let y = snake.segments[0].y;
+        transform.translation.x = x;
+        transform.translation.y = y;
+        snake.position = vec2(x, y);
     }
 }
 
