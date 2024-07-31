@@ -10,6 +10,7 @@ pub struct Snake {
     pub(crate) segments: Vec<Position>,
     pub(crate) direction: DirectionMoviment,
     pub position: Vec2,
+    pub size: f32,
 }
 
 pub(crate) enum DirectionMoviment {

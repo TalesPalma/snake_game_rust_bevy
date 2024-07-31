@@ -1,26 +1,38 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::{apple::apple_systems::*, snake::snake_systems::*};
+use crate::{
+    apple::apple_systems::{spawn_apple_radom_locatint, Apple},
+    snake::snake_systems::*,
+};
 
-pub fn behavior_game_system(snake_query: Query<&Snake>, apple_query: Query<&Apple>) {
-    //Se a cobra colidir com a maca
-    for snake in snake_query.iter() {
-        for apple in apple_query.iter() {
-            if is_colliding(&snake, &apple) {
-                println!("A cobra comeu a maca");
-            } else {
-                println!("A cobra nao comeu a maca ainda")
+pub fn behavior_game_system(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+    mut windows: Query<&Window, With<PrimaryWindow>>,
+    snake_query: Query<(&Transform, &Snake)>,
+    apple_query: Query<(Entity, &Transform, &Apple)>,
+) {
+    for (snake_transform, snake) in snake_query.iter() {
+        for (apple_entity, apple_transform, apple) in apple_query.iter() {
+            if is_colliding(snake_transform, apple_transform, snake.size) {
+                commands.entity(apple_entity).despawn();
+                spawn_apple_radom_locatint(
+                    &mut commands,
+                    &mut meshes,
+                    &mut materials,
+                    &mut windows,
+                );
             }
         }
     }
 }
 
 //Precisamos implementar um size para cobra e a maca
-fn is_colliding(snake: &Snake, apple: &Apple) -> bool {
-    let position_snake_x = snake.position.x;
-    let position_snake_y = snake.position.y;
-    let position_apple_x = apple.position.x;
-    let position_apple_y = apple.position.y;
+fn is_colliding(snake: &Transform, apple: &Transform, snake_size: f32) -> bool {
+    let snake_pos = snake.translation;
+    let apple_pos = apple.translation;
+    let collision_radius = snake_size / 2.0;
 
-    position_apple_y == position_snake_y && position_apple_x == position_snake_x
+    snake_pos.distance(apple_pos) < collision_radius
 }

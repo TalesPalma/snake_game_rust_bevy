@@ -51,7 +51,7 @@ fn setup(
             ],
             direction: DirectionMoviment::Up,
             position: Vec2::new(0.0, 0.0),
+            size: 20.0,
         });
-
-    apple_spawn(meshes, commands, materials, 300.0, 200.0)
+    apple_spawn(meshes, commands, materials, 300.0, 200.0);
 }
