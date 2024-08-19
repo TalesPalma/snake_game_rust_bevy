@@ -2,7 +2,7 @@ mod apple;
 mod game_behavior;
 mod snake;
 
-use apple::apple_systems::{apple_spawn, spawn_apple_radom_locatint};
+use apple::apple_systems::apple_spawn;
 use bevy::{
     prelude::*,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
