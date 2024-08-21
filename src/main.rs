@@ -33,12 +33,12 @@ fn setup(
     commands.spawn(Camera2dBundle::default());
 
     //Snake body
-    let triangulo = Mesh2dHandle(meshes.add(Rectangle::new(20.0, 20.0)));
+    let retangulo = Mesh2dHandle(meshes.add(Rectangle::new(20.0, 20.0)));
     let color = Color::hsl(0.0, 1.0, 0.2);
 
     commands
         .spawn(MaterialMesh2dBundle {
-            mesh: triangulo.clone(),
+            mesh: retangulo.clone(),
             material: materials.add(color),
             transform: Transform::from_xyz(0.0, 0.0, 0.0),
             ..default()
@@ -52,6 +52,7 @@ fn setup(
             direction: DirectionMoviment::Up,
             position: Vec2::new(0.0, 0.0),
             size: 20.0,
+            head_rotation: Quat::from_rotation_z(0.0),
         });
     apple_spawn(meshes, commands, materials, 300.0, 200.0);
 }

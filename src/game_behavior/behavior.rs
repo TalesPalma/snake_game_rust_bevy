@@ -24,7 +24,7 @@ pub fn behavior_game_system(
                     &mut windows,
                 );
                 let new_size = 1.1;
-                snake_transform.scale.x *= new_size;
+                snake_transform.scale.y *= new_size;
                 snake.size *= new_size;
             }
         }

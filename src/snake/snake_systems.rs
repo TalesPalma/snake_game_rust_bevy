@@ -11,6 +11,7 @@ pub struct Snake {
     pub(crate) direction: DirectionMoviment,
     pub position: Vec2,
     pub size: f32,
+    pub head_rotation: Quat,
 }
 
 pub(crate) enum DirectionMoviment {
@@ -18,6 +19,16 @@ pub(crate) enum DirectionMoviment {
     Down,
     Left,
     Right,
+}
+pub fn move_snake_in_screen(mut query: Query<(&mut Snake, &mut Transform)>) {
+    for (mut snake, mut transform) in query.iter_mut() {
+        let x = snake.segments[0].x;
+        let y = snake.segments[0].y;
+        transform.translation.x = x;
+        transform.translation.y = y;
+        transform.rotation = snake.head_rotation;
+        snake.position = vec2(x, y);
+    }
 }
 
 pub fn move_snake_controller_system(mut query: Query<&mut Snake>) {
@@ -31,28 +42,22 @@ pub fn move_snake_controller_system(mut query: Query<&mut Snake>) {
     }
 }
 
-pub fn move_snake_in_screen(mut query: Query<(&mut Snake, &mut Transform)>) {
-    for (mut snake, mut transform) in query.iter_mut() {
-        let x = snake.segments[0].x;
-        let y = snake.segments[0].y;
-        transform.translation.x = x;
-        transform.translation.y = y;
-        snake.position = vec2(x, y);
-    }
-}
-
 pub fn keyboard_input(mut query: Query<&mut Snake>, keyborad: Res<ButtonInput<KeyCode>>) {
     for mut snake in query.iter_mut() {
         if keyborad.pressed(KeyCode::KeyW) {
             snake.direction = DirectionMoviment::Up;
+            snake.head_rotation = Quat::from_rotation_z(0.0);
         }
         if keyborad.pressed(KeyCode::KeyS) {
             snake.direction = DirectionMoviment::Down;
+            snake.head_rotation = Quat::from_rotation_z(std::f32::consts::PI);
         }
         if keyborad.pressed(KeyCode::KeyA) {
             snake.direction = DirectionMoviment::Left;
+            snake.head_rotation = Quat::from_rotation_z(std::f32::consts::PI / 2.0);
         }
         if keyborad.pressed(KeyCode::KeyD) {
+            snake.head_rotation = Quat::from_rotation_z(3.0 * std::f32::consts::PI / 2.0);
             snake.direction = DirectionMoviment::Right;
         }
     }
